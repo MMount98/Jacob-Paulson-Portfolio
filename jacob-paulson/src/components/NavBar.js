@@ -19,7 +19,7 @@ export default function Sidebar() {
         </Link>
 
         <Link
-          to="https://www.tiktok.com/@jacobryanpaulson"
+          to="/ContactMe"
           className="btn btn-outline lg:mr-6 "
         >
           Contact Me!
