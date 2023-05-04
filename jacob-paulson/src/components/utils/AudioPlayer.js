@@ -1,84 +1,113 @@
-import { useState, useRef, useEffect } from "react";
-import { GiFastBackwardButton, GiFastForwardButton } from "react-icons/gi";
+import { useRef, useState, useEffect } from "react";
 import { AiFillPlayCircle, AiFillPauseCircle } from "react-icons/ai";
+import { GiFastBackwardButton, GiFastForwardButton } from "react-icons/gi";
 
-export default function AudioPlayer() {
-  //State
+
+function AudioPlayer() {
+    ///Refences
+  const Player = useRef(null);
+  const progressBar = useRef(null);
+
+  //States
   const [isPlaying, setIsPlaying] = useState(false);
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
 
-  //Refrence
-  const Player = useRef();
-  const progressBar = useRef();
 
-  //Effect
-  useEffect(() => {
-    const sec = Math.floor(Player.current.duration);
-    setDuration(sec);
-    progressBar.current.max = sec;
-  }, [Player?.current?.loadedmetadata, Player?.current?.readyState]);
-
-  //Function to correct the time from useEffect
-  const correctTime = (secs) => {
-    const minutes = Math.floor(secs / 60);
-    const returnMin = minutes < 10 ? `0${minutes}` : `${minutes}`;
-
-    const secsonds = Math.floor(secs % 60);
-    const returnSec = secsonds < 10 ? `0${secsonds}` : `${secsonds}`;
-
-    return `${returnMin} : ${returnSec}`;
-  };
-
-  //Funciton to Play music and change displaye play or pause
+  //Function Toggles play btn and sets state value
   const togglePlay = () => {
-    setIsPlaying(!isPlaying);
+    const player = Player.current;
     if (isPlaying) {
-      Player.current.play();
-    } else Player.current.pause();
+      player.pause();
+    } else {
+      player.play();
+    }
+    setIsPlaying(!isPlaying);
   };
-  //Function to change the value of curent range
 
   const changeRange = () => {
-    Player.current.currentTime = progressBar.current.value;
-    progressBar.current.style.setProperty(
-      "--seek-before-width",
-      `${(progressBar.current.value / duration) * 100}%`
-    );
-    setCurrentTime(progressBar.current.value);
+    const player = Player.current;
+    player.currentTime = progressBar.current.value;
+    setCurrentTime(player.currentTime);
   };
 
+  const backThirty = () => {
+    const player = Player.current;
+    player.currentTime = player.currentTime - 30;
+    setCurrentTime(player.currentTime);
+  };
+
+  const forwardThirty = () => {
+    const player = Player.current;
+    player.currentTime = player.currentTime + 30;
+    setCurrentTime(player.currentTime);
+  };
+
+  const correctTime = (time) => {
+    if (isNaN(time)) {
+      return "0:00";
+    }
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+    return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+  };
+
+  useEffect(() => {
+    const player = Player.current;
+
+    const handleDuration = () => {
+      setDuration(player.duration);
+      setCurrentTime(player.currentTime);
+    };
+    player.addEventListener("loadedmetadata", handleDuration);
+
+    const handleTimeUpdate = () => {
+      setCurrentTime(player.currentTime);
+    };
+    player.addEventListener("timeupdate", handleTimeUpdate);
+
+    return () => {
+      player.removeEventListener("loadedmetadata", handleDuration);
+      player.removeEventListener("timeupdate", handleTimeUpdate);
+    };
+  }, []);
+
   return (
-    <div className="AudioPlayer">
+    <div className="AudioPlayer bg-red-700 w-2/6">
       <audio
         ref={Player}
         src="https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3"
         preload="metadata"
       ></audio>
-      <button>
-        {" "}
-        <GiFastBackwardButton />{" "}
+      <button onClick={backThirty}>
+        <GiFastBackwardButton />
       </button>
       <button onClick={togglePlay}>
-        {isPlaying ? <AiFillPlayCircle /> : <AiFillPauseCircle />}
+        {isPlaying ? <AiFillPauseCircle /> : <AiFillPlayCircle />}
       </button>
-      <button>
+      <button onClick={forwardThirty}>
         <GiFastForwardButton />
       </button>
 
-      <div>{correctTime(currentTime)}</div>
+      <div className="inline-block">{correctTime(currentTime)}</div>
 
-      <div>
+      <div className="inline-block w-60 mx-4">
         <input
           type="range"
           defaultValue={0}
           ref={progressBar}
-          style={{ "--seek-before-width": "100px" }}
+          className="slider slider-secondary"
           onChange={changeRange}
+          max={duration}
+          step="0.01"
         ></input>
       </div>
-      {/* Checking for a passed duartion and if it is a number */}
-      <div>{duration && !isNaN(duration) && correctTime(duration)}</div>
+      {/* Checking for a passed duration and if it is a number */}
+      <div className="inline-block">
+        {duration && !isNaN(duration) && correctTime(duration)}
+      </div>
     </div>
   );
 }
+
+export default AudioPlayer;
