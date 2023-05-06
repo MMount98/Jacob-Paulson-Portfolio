@@ -28,8 +28,12 @@ export default function ProjectList(props) {
               <div className="text-white text-center">
                 <h3 className="text-lg font-medium mb-2">{project.title}</h3>
                 <p className="text-sm mb-3 text-gray-300">
-                  {project.description}
+                  {project.band}
                 </p>
+                <p className="text-sm mb-3 text-gray-300">
+                  {project.role}
+                </p>
+                <button className="btn btn-outline">Listen</button>
               </div>
             </div>
           )}
