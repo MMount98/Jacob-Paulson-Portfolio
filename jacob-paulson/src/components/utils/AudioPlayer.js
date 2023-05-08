@@ -2,9 +2,8 @@ import { useRef, useState, useEffect } from "react";
 import { AiFillPlayCircle, AiFillPauseCircle } from "react-icons/ai";
 import { GiFastBackwardButton, GiFastForwardButton } from "react-icons/gi";
 
-
 function AudioPlayer() {
-    ///Refences
+  ///Refences
   const Player = useRef(null);
   const progressBar = useRef(null);
 
@@ -12,7 +11,6 @@ function AudioPlayer() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
-
 
   //Function Toggles play btn and sets state value
   const togglePlay = () => {
@@ -76,7 +74,7 @@ function AudioPlayer() {
     <div className="AudioPlayer bg-red-700 w-2/6">
       <audio
         ref={Player}
-        src="https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3"
+        src="https://soundcloud.com/blush-1999/tokyo.mp3"
         preload="metadata"
       ></audio>
       <button onClick={backThirty}>
