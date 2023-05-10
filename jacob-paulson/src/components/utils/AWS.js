@@ -34,6 +34,7 @@ const AWSPlayer = ({ audioUrl }) => {
       {audioBuffer && (
         <audio
           controls={true}
+          controlsList="nodownload"
           src={URL.createObjectURL(
             new Blob([audioBuffer], { type: "audio/mp3" })
           )}
