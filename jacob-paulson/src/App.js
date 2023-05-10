@@ -10,7 +10,7 @@ function App() {
       <Router>
         <Sidebar />
         <Routes>
-          <Route path="/" element={<AWSPlayer audioUrl="UPA6GE2-rain.mp3" />} />
+          <Route path="/" element={<Home />} />
         </Routes>
       </Router>
     </>
