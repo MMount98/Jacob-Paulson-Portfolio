@@ -1,19 +1,24 @@
 import { useEffect, useState } from "react";
-import albumCards from "../utils/spotifyAPI";
+import SpotifyCard from "../utils/SpotifyCard";
+import getToken from "../utils/TokenSpotify";
 
 export default function Home() {
+  const token = getToken();
+
   const [albums, setAlbums] = useState([
     {
       title: "Very!, Ivan!",
       role: "Producer and Engineer",
       id: 1,
-      trackId: "3USiT490xuabOBrGrXTsVz",
-      img: "https://open.spotify.com/embed/track/3USiT490xuabOBrGrXTsVz?",
+      trackId: "11dFghVXANMlKmJXsNCbNl",
+      img: "https://placehold.co/300",
     },
   ]);
   return (
     <>
-      <albumCards albums={albums} />
+        
+          <SpotifyCard token={token} albums={albums} />;   
+ 
     </>
   );
 }
