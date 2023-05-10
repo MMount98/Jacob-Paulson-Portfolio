@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import SpotifyPlayer from 'react-spotify-web-playback';
 
-const AudioPlayer = ({ token, trackId }) => {
+const AudioPlayer = ({ trackId }) => {
   const [playerReady, setPlayerReady] = useState(false);
   const [playerState, setPlayerState] = useState({
     paused: true,
@@ -18,7 +18,7 @@ const AudioPlayer = ({ token, trackId }) => {
 
   return (
     <SpotifyPlayer
-      token={token}
+      token={process.env.REACT_APP_SPOTIFY_ACCESS_TOKEN} // Pass the access token as a prop
       uris={[`spotify:track:${trackId}`]}
       initialVolume={0.5}
       play={playerState.paused === true ? false : true}

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import AudioPlayer from "./SpotifyPlayer";
 
-const SpotifyCard = ({ token, albums }) => {
+const SpotifyCard = ({ albums }) => {
   const [isPlaying, setIsPlaying] = useState(false);
 
   const handlePlay = () => {
@@ -15,7 +15,10 @@ const SpotifyCard = ({ token, albums }) => {
   return (
     <div className="place-items-center grid grid-cols-4 p-4 gap-2">
       {albums.map((album) => (
-        <div className="bg-white rounded-md shadow-md overflow-hidden">
+        <div
+          className="bg-white rounded-md shadow-md overflow-hidden"
+          key={album.id}
+        >
           <div className="p-4">
             <h2 className="font-bold text-lg">{album.title}</h2>
             <p>{album.role}</p>
@@ -34,7 +37,7 @@ const SpotifyCard = ({ token, albums }) => {
           </div>
           {isPlaying && (
             <div className="p-4">
-              <AudioPlayer token={token} trackId={album.trackId} />
+              <AudioPlayer previewUrl={album.trackId} />
             </div>
           )}
         </div>
