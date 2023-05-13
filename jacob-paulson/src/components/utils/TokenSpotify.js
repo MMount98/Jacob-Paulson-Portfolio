@@ -1,6 +1,6 @@
 const getToken = async () => {
-  const clientId = ""
-  const clientSecret = ""
+  const clientId = "1c233dbd0b694d94b6db629e09c86249";
+  const clientSecret = "1f830405e4de468b8165cd4a88da02be";
 
   // Step 1: Request authorization from the user
   const response = await fetch(`https://accounts.spotify.com/api/token`, {
@@ -19,7 +19,7 @@ const getToken = async () => {
   // Step 2: Retrieve the access token from the response
   const { access_token } = await response.json();
 
+  console.log("Access token:", access_token);
+
   return access_token;
 };
-
-export default getToken;

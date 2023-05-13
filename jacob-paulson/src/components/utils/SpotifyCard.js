@@ -3,9 +3,11 @@ import AudioPlayer from "./SpotifyPlayer";
 
 const SpotifyCard = ({ albums }) => {
   const [isPlaying, setIsPlaying] = useState(false);
+  const [playingTrackId, setPlayingTrackId] = useState(null);
 
-  const handlePlay = () => {
+  const handlePlay = (trackId) => {
     setIsPlaying(true);
+    setPlayingTrackId(trackId);
   };
 
   const handlePause = () => {
@@ -24,7 +26,7 @@ const SpotifyCard = ({ albums }) => {
             <p>{album.role}</p>
             <button
               className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-              onClick={handlePlay}
+              onClick={() => handlePlay(album.trackId)}
             >
               Play
             </button>
