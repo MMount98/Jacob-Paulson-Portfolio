@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import SpotifyWebApi from "spotify-web-api-js";
-import SongSearch from "../utils/SpotifyPlayer";
 
 const spotifyApi = new SpotifyWebApi();
 // 4db16UfvCQp1INplJxc3zC artist id
 
 export default function Home() {
+  const [hovered, setHovered] = useState(null);
   const [tracks, setTracks] = useState([
     {
       title: "WDYCMB",
@@ -95,6 +95,17 @@ export default function Home() {
         "https://i.scdn.co/image/ab67616d00001e02668c5c78a4266900075d851f",
       url: "https://api.spotify.com/v1/albums/3fzXNX9hGxAvd4Qy2gwdnJ",
     },
+    {
+      title: "Make Your Bed",
+      artist: "BLUSH",
+      role: "Producer and Engineer",
+      id: 9,
+      preview_url:
+        "https://p.scdn.co/mp3-preview/0c31b8d2593f22815fa3c258d64e3c27329d2f7f?cid=1c233dbd0b694d94b6db629e09c86249",
+      images:
+        "https://i.scdn.co/image/ab67616d00001e027d0912f34a62456daaacb36a",
+      url: "https://api.spotify.com/v1/albums/7nZ2iw6SYV3XeFG2p6WSXW",
+    },
   ]);
 
   const getAccessToken = async () => {
@@ -131,18 +142,53 @@ export default function Home() {
     });
   }, []);
 
+  const handleMouseEnter = (id) => {
+    setHovered(id);
+  };
+
+  const handleMouseLeave = () => {
+    setHovered(null);
+  };
+
   return (
     <>
-      {tracks.map((track) => (
-        <div key={track.id}>
-          <h2>{track.name}</h2>
-          <img src={track.images} alt={track.title} />
-          <audio controls>
-            <source src={track.preview_url} type="audio/mpeg" />
-          </audio>
-        </div>
-      ))}
-      <SongSearch />
+      <div className="grid grid-cols-4 place-content-evenly gap-4">
+        {tracks.map((track) => (
+          <div
+            key={track.id}
+            onMouseEnter={() => handleMouseEnter(track.id)}
+            onMouseLeave={handleMouseLeave}
+            className="relative h-full"
+          >
+            <img className="rounded" src={track.images} alt={track.title} />
+            {hovered === track.id && (
+              <>
+                <div
+                  className="transistion-opacity duration-300 absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center"
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                  }}
+                >
+                  <div className="text-white text-center">
+                    <h1 className="text-lg font-medium mb-2">{track.title}</h1>
+                    <h2 className="text-md mb-3 text-gray-300">
+                      {track.artist}
+                    </h2>
+                    <p className="text-sm mb-3 text-gray-300">{track.role}</p>
+                  </div>
+                </div>
+                <audio controls>
+                  <source src={track.preview_url} type="audio/mpeg" />
+                </audio>
+              </>
+            )}
+          </div>
+        ))}
+      </div>
     </>
   );
 }
