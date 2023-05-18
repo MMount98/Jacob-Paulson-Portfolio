@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import SpotifyWebApi from "spotify-web-api-js";
+import { PlayIcon } from "@heroicons/react/solid";
 
 const spotifyApi = new SpotifyWebApi();
-// 4db16UfvCQp1INplJxc3zC artist id
 
 export default function Home() {
   const [hovered, setHovered] = useState(null);
+  const [selectedTrack, setSelectedTrack] = useState(null);
+  const [isPlayerVisible, setPlayerVisible] = useState(false);
   const [tracks, setTracks] = useState([
     {
       title: "WDYCMB",
@@ -113,7 +115,6 @@ export default function Home() {
     const { access_token } = await response.json();
 
     spotifyApi.setAccessToken(access_token);
-    console.log(response);
   };
 
   const searchTracks = async () => {
@@ -150,9 +151,64 @@ export default function Home() {
     setHovered(null);
   };
 
+  const handlePlayClick = (track) => {
+    setSelectedTrack(track);
+    setPlayerVisible(true);
+  };
+
+  const handleDrawerClose = () => {
+    setSelectedTrack(null);
+    setPlayerVisible(false);
+  };
+
   return (
     <>
-      <div className="grid grid-cols-4 place-content-evenly gap-4">
+      {isPlayerVisible && (
+        <div className="drawer open">
+          <div className="flex items-center justify-center h-full">
+            {selectedTrack && (
+              <>
+                <input
+                  id={selectedTrack.id}
+                  type="checkbox"
+                  className="drawer-toggle"
+                  checked={isPlayerVisible}
+                  onChange={handleDrawerClose}
+                />
+                <div className="drawer-content">
+                  <audio src={selectedTrack.preview_url} controls autoPlay />
+                  <button className="close-button" onClick={handleDrawerClose}>
+                    Close
+                  </button>
+                </div>
+                <div className="drawer-side">
+                  <input
+                    id={selectedTrack.id + "-content"}
+                    type="checkbox"
+                    className="drawer-toggle"
+                    checked={isPlayerVisible}
+                    onChange={handleDrawerClose}
+                  />
+                  <label
+                    htmlFor={selectedTrack.id + "-content"}
+                    className="drawer-overlay"
+                  ></label>
+
+                  <h1>{selectedTrack.title}</h1>
+                  <h2>{selectedTrack.artist}</h2>
+                  <img
+                    className="rounded"
+                    src={selectedTrack.images}
+                    alt={selectedTrack.title}
+                  />
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+
+      <div className="grid grid-cols-4 place-content-evenly gap-4 p-36">
         {tracks.map((track) => (
           <div
             key={track.id}
@@ -160,31 +216,32 @@ export default function Home() {
             onMouseLeave={handleMouseLeave}
             className="relative h-full"
           >
+            {/* Track image and overlay */}
             <img className="rounded" src={track.images} alt={track.title} />
             {hovered === track.id && (
-              <>
-                <div
-                  className="transistion-opacity duration-300 absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center"
-                  style={{
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                  }}
-                >
-                  <div className="text-white text-center">
-                    <h1 className="text-lg font-medium mb-2">{track.title}</h1>
-                    <h2 className="text-md mb-3 text-gray-300">
-                      {track.artist}
-                    </h2>
-                    <p className="text-sm mb-3 text-gray-300">{track.role}</p>
-                  </div>
+              <div
+                className="transition-opacity duration-300 absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center"
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                }}
+              >
+                <div className="text-white text-center">
+                  <h1 className="text-lg font-medium mb-2">{track.title}</h1>
+                  <h2 className="text-md mb-3 text-gray-300">{track.artist}</h2>
+                  <p className="text-sm mb-3 text-gray-300">{track.role}</p>
+                  <button
+                    className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
+                    onClick={() => handlePlayClick(track)}
+                  >
+                    <PlayIcon className="h-5 w-5 mr-1" />
+                    Play
+                  </button>
                 </div>
-                <audio controls>
-                  <source src={track.preview_url} type="audio/mpeg" />
-                </audio>
-              </>
+              </div>
             )}
           </div>
         ))}
