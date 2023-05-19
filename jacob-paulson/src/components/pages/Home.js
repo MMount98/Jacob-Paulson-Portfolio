@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import SpotifyWebApi from "spotify-web-api-js";
 import { PlayIcon } from "@heroicons/react/solid";
+import { XIcon } from "@heroicons/react/outline";
 
 const spotifyApi = new SpotifyWebApi();
 
@@ -137,6 +138,8 @@ export default function Home() {
     }
   };
 
+  const drawerContentRef = useRef(null);
+
   useEffect(() => {
     getAccessToken().then(() => {
       searchTracks();
@@ -154,6 +157,11 @@ export default function Home() {
   const handlePlayClick = (track) => {
     setSelectedTrack(track);
     setPlayerVisible(true);
+
+    // Scroll to the top of the drawer content
+    if (drawerContentRef.current) {
+      drawerContentRef.current.scrollIntoView({ behavior: "smooth" });
+    }
   };
 
   const handleDrawerClose = () => {
@@ -165,50 +173,58 @@ export default function Home() {
     <>
       {isPlayerVisible && (
         <div className="drawer open">
-          <div className="flex items-center justify-center h-full">
-            {selectedTrack && (
-              <>
+          {selectedTrack && (
+            <>
+              <div className="grid grid-cols-2 bg-slate-600 mx-72 h-5/6 rounded">
+                <button
+                  className="absolute top-2 right-2 text-gray-300 hover:text-white focus:outline-none"
+                  onClick={handleDrawerClose}
+                >
+                  <XIcon className=" bg-black rounded absolute h-5 w-5 right-72 top-16" />
+                </button>
                 <input
                   id={selectedTrack.id}
                   type="checkbox"
-                  className="drawer-toggle"
+                  className="drawer-toggle hidden"
                   checked={isPlayerVisible}
                   onChange={handleDrawerClose}
+                  ref={drawerContentRef}
                 />
-                <div className="drawer-content">
-                  <audio src={selectedTrack.preview_url} controls autoPlay />
-                  <button className="close-button" onClick={handleDrawerClose}>
-                    Close
-                  </button>
+                <div className="flex justify-center items-center p-6">
+                  <ul>
+                    <h1 className="text-5xl font-bold text-white">
+                      {selectedTrack.title}
+                    </h1>
+                    <div className="divider my-2 h-3 bg-slate-50"></div>
+                    <h2 className="text-3xl text-white">
+                      {selectedTrack.artist}
+                    </h2>
+                    <h2 className="text-3xl text-white">
+                      {selectedTrack.role}
+                    </h2>
+                  </ul>
                 </div>
-                <div className="drawer-side">
-                  <input
-                    id={selectedTrack.id + "-content"}
-                    type="checkbox"
-                    className="drawer-toggle"
-                    checked={isPlayerVisible}
-                    onChange={handleDrawerClose}
-                  />
-                  <label
-                    htmlFor={selectedTrack.id + "-content"}
-                    className="drawer-overlay"
-                  ></label>
-
-                  <h1>{selectedTrack.title}</h1>
-                  <h2>{selectedTrack.artist}</h2>
+                <div className="drawer-content flex flex-col justify-center items-center">
                   <img
                     className="rounded"
                     src={selectedTrack.images}
                     alt={selectedTrack.title}
                   />
+                  <audio
+                    src={selectedTrack.preview_url}
+                    controls
+                    autoPlay
+                    controlsList="nodownload"
+                    className="my-6"
+                  />
                 </div>
-              </>
-            )}
-          </div>
+              </div>
+            </>
+          )}
         </div>
       )}
 
-      <div className="grid grid-cols-4 place-content-evenly gap-4 p-36">
+      <div className="grid grid-cols-4 place-content-evenly gap-4 px-36">
         {tracks.map((track) => (
           <div
             key={track.id}
@@ -234,11 +250,10 @@ export default function Home() {
                   <h2 className="text-md mb-3 text-gray-300">{track.artist}</h2>
                   <p className="text-sm mb-3 text-gray-300">{track.role}</p>
                   <button
-                    className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
+                    className="bg-green-500 px-4 py-2 rounded-md hover:bg-green-600"
                     onClick={() => handlePlayClick(track)}
                   >
                     <PlayIcon className="h-5 w-5 mr-1" />
-                    Play
                   </button>
                 </div>
               </div>

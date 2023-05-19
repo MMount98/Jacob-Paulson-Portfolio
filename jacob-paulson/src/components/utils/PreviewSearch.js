@@ -31,7 +31,7 @@ export default function Preview() {
     setToken("");
     window.localStorage.removeItem("token");
   };
-//curently set to search for artist and return their tracks
+//curently set to search for artist by id and return their tracks
   const searchTracks = async (e) => {
     e.preventDefault();
     const { data } = await axios.get(
