@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import SpotifyWebApi from "spotify-web-api-js";
 import { PlayIcon } from "@heroicons/react/solid";
 import { XIcon } from "@heroicons/react/outline";
+import { motion, AnimatePresence } from "framer-motion";
 
 const spotifyApi = new SpotifyWebApi();
 
@@ -172,94 +173,114 @@ export default function Home() {
   return (
     <>
       {isPlayerVisible && (
-        <div className="drawer open">
-          {selectedTrack && (
-            <>
-              <div className="grid grid-cols-2 bg-slate-600 mx-72 h-5/6 rounded">
-                <button
-                  className="absolute top-2 right-2 text-gray-300 hover:text-white focus:outline-none"
-                  onClick={handleDrawerClose}
-                >
-                  <XIcon className=" bg-black rounded absolute h-5 w-5 right-72 top-16" />
-                </button>
-                <input
-                  id={selectedTrack.id}
-                  type="checkbox"
-                  className="drawer-toggle hidden"
-                  checked={isPlayerVisible}
-                  onChange={handleDrawerClose}
-                  ref={drawerContentRef}
-                />
-                <div className="flex justify-center items-center p-6">
-                  <ul>
-                    <h1 className="text-5xl font-bold text-white">
-                      {selectedTrack.title}
-                    </h1>
-                    <div className="divider my-2 h-3 bg-slate-50"></div>
-                    <h2 className="text-3xl text-white">
-                      {selectedTrack.artist}
-                    </h2>
-                    <h2 className="text-3xl text-white">
-                      {selectedTrack.role}
-                    </h2>
-                  </ul>
-                </div>
-                <div className="drawer-content flex flex-col justify-center items-center">
-                  <img
-                    className="rounded"
-                    src={selectedTrack.images}
-                    alt={selectedTrack.title}
-                  />
-                  <audio
-                    src={selectedTrack.preview_url}
-                    controls
-                    autoPlay
-                    controlsList="nodownload"
-                    className="my-6"
-                  />
-                </div>
-              </div>
-            </>
-          )}
-        </div>
-      )}
-
-      <div className="grid grid-cols-4 place-content-evenly gap-4 px-36">
-        {tracks.map((track) => (
-          <div
-            key={track.id}
-            onMouseEnter={() => handleMouseEnter(track.id)}
-            onMouseLeave={handleMouseLeave}
-            className="relative h-full"
+        <AnimatePresence>
+          <motion.div
+            className="drawer open"
+            initial={{ y: "100%", opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: "-100%", opacity: 0 }}
+            transition={{ duration: 0.5, ease: "easeInOut" }}
+            ref={drawerContentRef}
           >
-            {/* Track image and overlay */}
-            <img className="rounded" src={track.images} alt={track.title} />
-            {hovered === track.id && (
-              <div
-                className="transition-opacity duration-300 absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center"
-                style={{
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                }}
-              >
-                <div className="text-white text-center">
-                  <h1 className="text-lg font-medium mb-2">{track.title}</h1>
-                  <h2 className="text-md mb-3 text-gray-300">{track.artist}</h2>
-                  <p className="text-sm mb-3 text-gray-300">{track.role}</p>
+            {selectedTrack && (
+              <>
+                <div className="grid grid-cols-2 bg-slate-600 mx-72 h-5/6 rounded">
                   <button
-                    className="bg-green-500 px-4 py-2 rounded-md hover:bg-green-600"
-                    onClick={() => handlePlayClick(track)}
+                    className="absolute top-2 right-2 text-gray-300 hover:text-white focus:outline-none"
+                    onClick={handleDrawerClose}
                   >
-                    <PlayIcon className="h-5 w-5 mr-1" />
+                    <XIcon className=" bg-black rounded absolute h-5 w-5 right-72 top-16" />
                   </button>
+                  <input
+                    id={selectedTrack.id}
+                    type="checkbox"
+                    className="drawer-toggle hidden"
+                    checked={isPlayerVisible}
+                    onChange={handleDrawerClose}
+                    ref={drawerContentRef}
+                  />
+                  <div className="flex justify-center items-center p-6">
+                    <ul>
+                      <h1 className="text-5xl font-bold text-white">
+                        {selectedTrack.title}
+                      </h1>
+                      <div className="divider my-2 h-1 bg-slate-50"></div>
+                      <h2 className="text-3xl text-white">
+                        {selectedTrack.artist}
+                      </h2>
+                      <h2 className="text-3xl text-white">
+                        {selectedTrack.role}
+                      </h2>
+                    </ul>
+                  </div>
+                  <div className="drawer-content flex flex-col justify-center items-center">
+                    <img
+                      className="rounded"
+                      src={selectedTrack.images}
+                      alt={selectedTrack.title}
+                    />
+                    <audio
+                      src={selectedTrack.preview_url}
+                      controls
+                      autoPlay
+                      controlsList="nodownload"
+                      className="my-6"
+                    />
+                  </div>
                 </div>
-              </div>
+              </>
             )}
-          </div>
-        ))}
+          </motion.div>
+        </AnimatePresence>
+      )}
+  <h1 className="text-5xl text-center mt-4">Recent Projects</h1>
+      <div className="grid grid-cols-4 place-content-evenly gap-4 my-1 mx-14 p-10">
+        <AnimatePresence>
+          {tracks.map((track) => (
+            <motion.div
+              key={track.id}
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{
+                duration: 0.3,
+                delay: 0.2 * track.id,
+                ease: "easeOut",
+              }}
+              onMouseEnter={() => handleMouseEnter(track.id)}
+              onMouseLeave={handleMouseLeave}
+              className="relative h-full"
+            >
+              {/* Track image and overlay */}
+              <img className="rounded" src={track.images} alt={track.title} />
+              {hovered === track.id && (
+                <div
+                  className="transition-opacity duration-300 absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center"
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                  }}
+                >
+                  <div className="text-white text-center">
+                    <h1 className="text-lg font-medium mb-2">{track.title}</h1>
+                    <h2 className="text-md mb-3 text-gray-300">
+                      {track.artist}
+                    </h2>
+                    <p className="text-sm mb-3 text-gray-300">{track.role}</p>
+                    <button
+                      className="bg-green-500 px-4 py-2 rounded-md hover:bg-green-600"
+                      onClick={() => handlePlayClick(track)}
+                    >
+                      <PlayIcon className="h-5 w-5 mr-1" />
+                    </button>
+                  </div>
+                </div>
+              )}
+            </motion.div>
+          ))}
+        </AnimatePresence>
       </div>
     </>
   );
