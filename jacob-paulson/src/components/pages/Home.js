@@ -172,6 +172,13 @@ export default function Home() {
 
   return (
     <>
+      <div className="grid grid-cols-2 gap-3 mx-6">
+        <h1 className="text-5xl">About Me</h1>
+        <h2 className="grid items-center text-2xl">
+          Record Producer, Mix Engineer, and Songwriter based in Dever, Colorado
+        </h2>
+      </div>
+      <div className="divider mx-56"></div>
       {isPlayerVisible && (
         <AnimatePresence>
           <motion.div
@@ -233,7 +240,7 @@ export default function Home() {
           </motion.div>
         </AnimatePresence>
       )}
-  <h1 className="text-5xl text-center mt-4">Recent Projects</h1>
+      <h1 className="text-5xl text-center mt-4">Recent Projects</h1>
       <div className="grid grid-cols-4 place-content-evenly gap-4 my-1 mx-14 p-10">
         <AnimatePresence>
           {tracks.map((track) => (
