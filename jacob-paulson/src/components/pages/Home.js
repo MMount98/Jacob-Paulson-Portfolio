@@ -184,12 +184,12 @@ export default function Home() {
           >
             {selectedTrack && (
               <>
-                <div className="grid grid-cols-2 bg-slate-600 mx-72 h-5/6 rounded">
+                <div className="grid grid-cols-2 bg-gradient-to-r from-stone-600 via-stone-500 to-gray-950  mx-20 h-5/6 rounded">
                   <button
                     className="absolute top-2 right-2 text-gray-300 hover:text-white focus:outline-none"
                     onClick={handleDrawerClose}
                   >
-                    <XIcon className=" bg-black rounded absolute h-5 w-5 right-72 top-16" />
+                    <XIcon className=" rounded absolute h-8 w-8 right-24 top-2" />
                   </button>
                   <input
                     id={selectedTrack.id}
@@ -215,7 +215,7 @@ export default function Home() {
                   </div>
                   <div className="drawer-content flex flex-col justify-center items-center">
                     <img
-                      className="rounded"
+                      className="rounded shadow-xl shadow-slate-200 w-7/12 max-w-lg"
                       src={selectedTrack.images}
                       alt={selectedTrack.title}
                     />
@@ -254,7 +254,7 @@ export default function Home() {
               <img className="rounded" src={track.images} alt={track.title} />
               {hovered === track.id && (
                 <div
-                  className="transition-opacity duration-300 absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center"
+                  className="transition-opacity duration-300 absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center rounded"
                   style={{
                     position: "absolute",
                     top: 0,
@@ -270,7 +270,7 @@ export default function Home() {
                     </h2>
                     <p className="text-sm mb-3 text-gray-300">{track.role}</p>
                     <button
-                      className="bg-green-500 px-4 py-2 rounded-md hover:bg-green-600"
+                      className="bg-green-600 px-4 py-2 rounded-md hover:bg-green-600"
                       onClick={() => handlePlayClick(track)}
                     >
                       <PlayIcon className="h-5 w-5 mr-1" />
