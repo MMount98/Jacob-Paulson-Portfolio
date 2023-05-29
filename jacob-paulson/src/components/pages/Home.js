@@ -4,6 +4,8 @@ import { PlayIcon } from "@heroicons/react/solid";
 import { XIcon } from "@heroicons/react/outline";
 import { motion, AnimatePresence } from "framer-motion";
 
+import AboutMe from "./About-Me";
+
 const spotifyApi = new SpotifyWebApi();
 
 export default function Home() {
@@ -172,12 +174,6 @@ export default function Home() {
 
   return (
     <>
-      <div className="grid grid-cols-2 gap-3 mx-6">
-        <h1 className="text-5xl">About Me</h1>
-        <h2 className="grid items-center text-2xl">
-          Record Producer, Mix Engineer, and Songwriter based in Dever, Colorado
-        </h2>
-      </div>
       <div className="divider mx-56"></div>
       {isPlayerVisible && (
         <AnimatePresence>
@@ -289,6 +285,9 @@ export default function Home() {
           ))}
         </AnimatePresence>
       </div>
+      <div className="divider mx-56"></div>
+
+      <AboutMe />
     </>
   );
 }
