@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useState, useRef } from "react";
 import SpotifyWebApi from "spotify-web-api-js";
 import { PlayIcon } from "@heroicons/react/solid";
 import { XIcon } from "@heroicons/react/outline";
@@ -114,23 +114,7 @@ export default function Home() {
     },
   ]);
 
-  const getAccessToken = async () => {
-    const response = await fetch("/api/spotify-auth");
-    const { access_token } = await response.json();
-
-    spotifyApi.setAccessToken(access_token);
-  };
-
-  const searchTracks = async () => {
-    try {
-      const response = await spotifyApi.searchTracks("track:Paranoid Android");
-      setTracks(response.tracks.items);
-      console.log(response.tracks.items);
-      logPreviewUrl(response.tracks.items[0].id);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+ 
 
   const logPreviewUrl = async (trackId) => {
     try {
@@ -142,12 +126,6 @@ export default function Home() {
   };
 
   const drawerContentRef = useRef(null);
-
-  useEffect(() => {
-    getAccessToken().then(() => {
-      searchTracks();
-    });
-  }, []);
 
   const handleMouseEnter = (id) => {
     setHovered(id);
